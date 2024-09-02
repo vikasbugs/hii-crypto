@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Graph Example</title>
+    <style>
+        /* CSS for styling the graph */
+        .bar-container {
+            width: 100%;
+            height: 500px;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .bar {
+            width: 18px;
+            margin: 0 5px;
+            background-color: #4CAF50;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .bar-label {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div id="barGraph" class="bar-container"></div>
+
+    <!-- Load Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include the script to generate the graph -->
+    <script>
+        async function generateBarGraph() {
+            // Fetch data from the API
+            const response = await fetch('https://randomuser.me/api/?results=50&nat=us');
+            const data = await response.json();
+            
+            // Extract names and create fake numerical values for demonstration
+            const names = data.results.map(user => `${user.name.first} ${user.name.last}`);
+            const values = Array.from({length: 50}, () => Math.floor(Math.random() * 100) + 1);
+            
+            const barGraphContainer = document.getElementById('barGraph');
+
+            names.forEach((name, index) => {
+                const bar = document.createElement('div');
+                bar.classList.add('bar');
+                bar.style.height = `${values[index]}%`;
+
+                const label = document.createElement('div');
+                label.classList.add('bar-label');
+                label.textContent = name;
+
+                bar.appendChild(label);
+                barGraphContainer.appendChild(bar);
+            });
+        }
+
+        // Generate the bar graph when the page loads
+        window.onload = generateBarGraph;
+    </script>
+</body>
+</html>

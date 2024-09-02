@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.20.0/firebase.min.css">
+    <style>
+        /* Same CSS as before */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Register</h2>
+        <form id="register" onsubmit="return validateRegister(event)">
+            <input type="text" id="registerName" placeholder="Name" required>
+            <input type="email" id="registerEmail" placeholder="Email" required>
+            <input type="password" id="registerPassword" placeholder="Password" required>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+            <div id="registerError" class="error"></div>
+            <button type="submit">Register</button>
+        </form>
+        <div class="toggle">
+            Already have an account? <a href="login.html">Login</a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            // Your Firebase configuration goes here
+            apiKey: "AIzaSyCmRJv9SnVqCDwn8PJmKcL9CaAZWPvclGE",
+  authDomain: "crypto-watch-e8f4a.firebaseapp.com",
+  projectId: "crypto-watch-e8f4a",
+  storageBucket: "crypto-watch-e8f4a.appspot.com",
+  messagingSenderId: "1085250652619",
+  appId: "1:1085250652619:web:3a45d44d017a10342e0e4e",
+  measurementId: "G-X26LD5S078"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        function validateRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorElement = document.getElementById('registerError');
+
+            if (password !== confirmPassword) {
+                errorElement.textContent = 'Passwords do not match.';
+                return false;
+            }
+
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Registration successful
+                    console.log('Registration successful:', userCredential.user);
+                    alert('Registration successful!');
+
+                    // Save user data to Firestore
+                    const db = firebase.firestore();
+                    db.collection('users').doc(userCredential.user.uid).set({
+                        name: name,
+                        email: email
+                    })
+                    .then(() => {
+                        console.log('User data saved to Firestore.');
+                        // Redirect to the login page or dashboard
+                    })
+                    .catch((error) => {
+                        console.error('Error saving user data:', error);
+                    });
+                })
+                .catch((error) => {
+                    // Registration failed
+                    errorElement.textContent = 'Failed to register. Please try again.';
+                    console.error('Registration error:', error);
+                });
+
+            return false;
+        }
+    </script>
+</body>
+</html>

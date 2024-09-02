@@ -1,0 +1,60 @@
+/* Hamburger menu styling */
+.hamburger {
+    display: block;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.bar {
+    width: 35px;
+    height: 5px;
+    background-color: #333;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+/* Navigation menu styling */
+.nav-menu {
+    display: none; /* Hidden by default */
+    background-color: #333;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 200px;
+    text-align: right;
+    padding: 10px;
+}
+
+.nav-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.nav-menu ul li {
+    margin: 15px 0;
+}
+
+.nav-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    transition: 0.3s;
+}
+
+.nav-menu ul li a:hover {
+    background-color: #555;
+}
+
+/* Animation for hamburger when menu is open */
+.hamburger.active .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-9px, 6px);
+}
+
+.hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-8px, -8px);
+}
